@@ -1,4 +1,10 @@
 let readline = require('readline-sync');
+const fs = require("fs");
+
+// absolute path for notes.json
+const path = require("path");
+const FILEPATH = path.resolve("data", "notes.json");
+
 
 let option = readline.question(`
     1. Add a note \n
@@ -10,11 +16,15 @@ let option = readline.question(`
     Enter your choice: `);
 
 function readFile() {
-    
+    let notesData = fs.readFileSync(FILEPATH, "utf8");
+    let notesParsed = JSON.parse(notesData);
+    return notesParsed
 }
 
-function writeFile() {
-
+function writeFile(notes) {
+    const json = JSON.stringify(notes, null, 2);
+    fs.writeFileSync(FILEPATH, json);
+    console.log("Note added successfully!")
 }
 
     
@@ -29,7 +39,9 @@ function addNote () {
         time_added : userTime
     }
 
-    const json = JSON.stringify(newNote, null, 2);
+    let notes = readFile()
+    notes.push(newNote)
 
-
+    writeFile(notes)  
 }
+
