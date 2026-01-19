@@ -15,6 +15,7 @@ let option = readline.question(`
     6. Exit \n
     Enter your choice: `);
 
+
 function readFile() {
     let notesData = fs.readFileSync(FILEPATH, "utf8");
     let notesParsed = JSON.parse(notesData);
@@ -24,7 +25,6 @@ function readFile() {
 function writeFile(notes) {
     const json = JSON.stringify(notes, null, 2);
     fs.writeFileSync(FILEPATH, json);
-    console.log("Note added successfully!");
 }
 
     
@@ -42,7 +42,8 @@ function addNote () {
     let notes = readFile();
     notes.push(newNote);
 
-    writeFile(notes);  
+    writeFile(notes); 
+    console.log("Note added successfully!"); 
 };
 
 
@@ -58,4 +59,36 @@ function listNotes() {
     };
 };
 
-listNotes()
+function readNote() {
+    const noteToFind = readline.question("Enter note title: ")
+
+    let notes = readFile();
+
+    for (let note of notes) {
+        if (noteToFind === note.title) {
+            console.log(
+            `Title: ${note.title} \n`+
+            `Body: ${note.body} \n`+
+            `Added on: ${note.time_added} \n`)
+            return;
+        }
+    }
+    console.log("Note not found.");    
+};
+
+
+function deleteNote() {
+    const noteToDelete = readline.question("Enter note title: ")
+
+    let notes = readFile();
+
+    let leftOverNotes = []
+
+    for (let note of notes) {
+        if (noteToDelete != note.title) {
+            leftOverNotes.push(note)
+        }
+    }
+    writeFile(leftOverNotes);  
+    console.log("Note deleted successfully!");    
+};
