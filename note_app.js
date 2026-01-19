@@ -6,16 +6,6 @@ const path = require("path");
 const FILEPATH = path.resolve("data", "notes.json");
 
 
-let option = readline.question(`
-    1. Add a note \n
-    2. List all notes \n
-    3. Read a note \n
-    4. Delete a note \n
-    5. Update a note \n
-    6. Exit \n
-    Enter your choice: `);
-
-
 function readFile() {
     let notesData = fs.readFileSync(FILEPATH, "utf8");
     let notesParsed = JSON.parse(notesData);
@@ -82,7 +72,7 @@ function deleteNote() {
 
     let notes = readFile();
 
-    let leftOverNotes = []
+    let leftOverNotes = [];
 
     for (let note of notes) {
         if (noteToDelete != note.title) {
@@ -92,3 +82,58 @@ function deleteNote() {
     writeFile(leftOverNotes);  
     console.log("Note deleted successfully!");    
 };
+
+
+function updateNote() {
+    const noteToUpdate = readline.question("Enter note title: ");
+    let notes = readFile();
+
+    for (let note of notes) {
+        if (noteToUpdate === note.title) {
+            const newBody = readline.question("Enter new note body: ")
+            note.body = newBody
+            writeFile(notes)
+            console.log("Note updated successfully!")
+            return;
+        }
+    }
+    console.log("Note not found.");   
+};
+
+while (true) {
+
+    let option = readline.question(`
+    1. Add a note \n
+    2. List all notes \n
+    3. Read a note \n
+    4. Delete a note \n
+    5. Update a note \n
+    6. Exit \n
+    Enter your choice: `);
+
+    if (option === "1") {
+        addNote()
+    }
+    else if (option === "2") {
+        listNotes()
+    }
+    else if (option === "3") {
+        readNote()
+    }
+    else if (option === "4") {
+        deleteNote()
+    }
+    else if (option === "5") {
+        updateNote()
+    }
+    else if (option === "6") {
+        console.log("Goodbye!")
+        break;
+    }
+    else {
+        console.log("Invalid input, enter one of the numbers: 1-6")
+    }
+}
+
+
+
